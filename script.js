@@ -27,10 +27,10 @@ const myLibrary = [
     //books will add here
 ];
 
-function createBookCard(title, author, pages, isRead) {
+function createBookCard(title, author, pages, isRead){
     // Create a book card container
     const bookCard = document.createElement('div');
-    bookCard.classList.add('book-card'); // Optional: Add a class for styling
+    bookCard.classList.add('book-card'); 
 
     // Create and set up child elements
     const titleText = document.createElement('h3');
@@ -47,7 +47,6 @@ function createBookCard(title, author, pages, isRead) {
 
     // Append elements to the book card
     bookCard.append(titleText, authorText, pagesText, isReadText);
-    bookDisplay.appendChild(bookCard);
     return bookCard;
 }
 
@@ -58,19 +57,31 @@ function Book(title, author, pages, isRead) {
   this.isRead = isRead;
 }
 
-function addBookToLibrary() {
-    let newBook = new Book('Abhinav bio', 'Abhi', 130, false);
-    myLibrary.push(newBook);
-  
-}
-
 addButton.addEventListener('click', () => {
-    addBookToLibrary();
-    displayBooks();
+    let submittedTitle = prompt('Title: ')
+    let submittedAuthor = prompt('Auth: ')
+    let submittedPages = prompt('Pages: ')
+    let submittedIsRead = prompt('isRead: ')
+
+    let newBook = new Book(submittedTitle, submittedAuthor, submittedPages, submittedIsRead);
+    addBookToLibrary(newBook)
+    return newBook;
 });
 
+function addBookToLibrary(newBook) {
+    myLibrary.push(newBook);
+    displayBooks();
+    console.log(newBook)
+    console.log(myLibrary);
+}
+
+
 function displayBooks() {
+    bookDisplay.innerHTML = '';
     for (const book of myLibrary) {
-        createBookCard(book.title, book.author, book.pages, book.isRead);
+        const bookCard = createBookCard(book.title, book.author, book.pages, book.isRead);
+        bookDisplay.appendChild(bookCard);
     }
 }
+
+displayBooks();
