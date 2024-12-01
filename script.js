@@ -1,6 +1,12 @@
-const addButton = document.querySelector('.add-btn');
 
 const bookDisplay = document.querySelector('.book-display');
+
+const addButton = document.querySelector('.add-btn');
+const dialog = document.getElementById("new-book-dialog");
+const cancelDialogBtn = document.getElementById("cancelDialog");
+const form = document.getElementById("book-form");
+const isRead = document.getElementById("isRead");
+
 
 const myLibrary = [
     //initial books
@@ -27,6 +33,47 @@ const myLibrary = [
     //books will add here
 ];
 
+function Book(title, author, pages, isRead) {
+  this.title = title;
+  this.author = author;
+  this.pages = pages;
+  this.isRead = isRead;
+}
+
+
+
+
+addButton.addEventListener('click', () => {    
+    dialog.showModal();
+});
+
+form.addEventListener("submit", (event) => {
+
+    event.preventDefault(); 
+    
+    let submittedTitle = document.getElementById('bookName').value;
+    let submittedAuthor = document.getElementById('author').value;
+    let submittedPages = document.getElementById('pages').value;
+    let submittedIsRead = isRead.checked ? 'true' : 'false';
+
+    let newBook = new Book(submittedTitle, submittedAuthor, submittedPages, submittedIsRead);
+    addBookToLibrary(newBook)
+    console.log(submittedIsRead);
+    form.reset();
+    dialog.close();
+  
+
+    return newBook;
+
+});
+
+function addBookToLibrary(newBook) {
+    myLibrary.push(newBook);
+    displayBooks();
+    console.log(newBook)
+    console.log(myLibrary);
+}
+
 function createBookCard(title, author, pages, isRead){
     // Create a book card container
     const bookCard = document.createElement('div');
@@ -43,36 +90,11 @@ function createBookCard(title, author, pages, isRead){
     pagesText.textContent = `Pages: ${pages}`;
 
     const isReadText = document.createElement('p');
-    isReadText.textContent = `Read: ${isRead ? 'Yes' : 'No'}`;
+    isReadText.textContent = `Read: ${isRead == 'true' ? 'Yes' : 'No'}`;
 
     // Append elements to the book card
     bookCard.append(titleText, authorText, pagesText, isReadText);
     return bookCard;
-}
-
-function Book(title, author, pages, isRead) {
-  this.title = title;
-  this.author = author;
-  this.pages = pages;
-  this.isRead = isRead;
-}
-
-addButton.addEventListener('click', () => {
-    let submittedTitle = prompt('Title: ')
-    let submittedAuthor = prompt('Auth: ')
-    let submittedPages = prompt('Pages: ')
-    let submittedIsRead = prompt('isRead: ')
-
-    let newBook = new Book(submittedTitle, submittedAuthor, submittedPages, submittedIsRead);
-    addBookToLibrary(newBook)
-    return newBook;
-});
-
-function addBookToLibrary(newBook) {
-    myLibrary.push(newBook);
-    displayBooks();
-    console.log(newBook)
-    console.log(myLibrary);
 }
 
 
@@ -85,3 +107,9 @@ function displayBooks() {
 }
 
 displayBooks();
+
+cancelDialogBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    form.reset();
+    dialog.close();
+  });
