@@ -1,35 +1,66 @@
-
 const bookDisplay = document.querySelector('.book-display');
 
 const addButton = document.querySelector('.add-btn');
+
 const dialog = document.getElementById("new-book-dialog");
 const cancelDialogBtn = document.getElementById("cancelDialog");
 const form = document.getElementById("book-form");
+
 const isRead = document.getElementById("isRead");
 
 
 const myLibrary = [
     //initial books
     book1 = {
-        title : 'Hail',
-        author : 'autho1',
-        pages : 124,
-        isRead : true,
+        title: 'To Kill a Mockingbird',
+        author: 'Harper Lee',
+        pages: 281,
+        isRead: true,
     },
-
+    
     book2 = {
-        title : 'Hail',
-        author : 'autho1',
-        pages : 124,
-        isRead : true,
+        title: '1984',
+        author: 'George Orwell',
+        pages: 328,
+        isRead: false,
     },
-
+    
     book3 = {
-        title : 'Hail',
-        author : 'autho1',
-        pages : 124,
-        isRead : true,
+        title: 'The Great Gatsby',
+        author: 'F. Scott Fitzgerald',
+        pages: 180,
+        isRead: true,
     },
+    
+    book4 = {
+        title: 'Pride and Prejudice',
+        author: 'Jane Austen',
+        pages: 279,
+        isRead: false,
+    },
+    
+    book5 = {
+        title: 'The Catcher in the Rye',
+        author: 'J.D. Salinger',
+        pages: 214,
+        isRead: true,
+    },
+    
+    book6 = {
+        title: 'The Hobbit',
+        author: 'J.R.R. Tolkien',
+        pages: 310,
+        isRead: false,
+    },
+    
+    book7 = {
+        title: 'Moby-Dick',
+        author: 'Herman Melville',
+        pages: 635,
+        isRead: true,
+    },
+    
+
     //books will add here
 ];
 
@@ -39,9 +70,6 @@ function Book(title, author, pages, isRead) {
   this.pages = pages;
   this.isRead = isRead;
 }
-
-
-
 
 addButton.addEventListener('click', () => {    
     dialog.showModal();
@@ -57,6 +85,7 @@ form.addEventListener("submit", (event) => {
     const submittedIsRead = isRead.checked ? 'true' : 'false';
 
     addBookToLibrary(submittedTitle, submittedAuthor, submittedPages, submittedIsRead);
+
     form.reset();
     dialog.close();
     
@@ -65,39 +94,17 @@ form.addEventListener("submit", (event) => {
 function addBookToLibrary(title, author, pages, isRead) {
     const newBook = new Book(title, author, pages, isRead)
     myLibrary.push(newBook);
+
     displayBooks();
-    console.log(newBook)
-    console.log(myLibrary);
 }
-
-// function createBookCard(title, author, pages, isRead){
-//     // Create a book card container
-//     const bookCard = document.createElement('div');
-//     bookCard.classList.add('book-card'); 
-
-//     // Create and set up child elements
-//     const titleText = document.createElement('h3');
-//     titleText.textContent = `Title: ${title}`;
-
-//     const authorText = document.createElement('p');
-//     authorText.textContent = `Author: ${author}`;
-
-//     const pagesText = document.createElement('p');
-//     pagesText.textContent = `Pages: ${pages}`;
-
-//     const isReadText = document.createElement('p');
-//     isReadText.textContent = `Read: ${isRead == 'true' ? 'Yes' : 'No'}`;
-    
-
-//     // Append elements to the book card
-//     bookCard.append(titleText, authorText, pagesText, isReadText);
-//     return bookCard;
-// }
 
 
 function displayBooks() {
+
     bookDisplay.innerHTML = '';
+
     myLibrary.forEach((book, index) => {
+
         const bookCard = document.createElement('div');
         bookCard.classList.add('book-card'); 
 
@@ -106,8 +113,15 @@ function displayBooks() {
                 <p>Author: ${book.author}</p>
                 <p>Pages: ${book.pages}</p>
                 <p>Read: ${book.isRead == 'true' ? 'Yes' : 'No'}</p>
-                <button class="toggle-read" data-index="${index}">Toggle Read</button>
-                <button class="remove-book" data-index="${index}">Remove</button>
+                <div class=card-button-div>
+                    <button class="card-button toggle-read" data-index="${index}">
+                        <i class="material-symbols-outlined">done_all</i>
+                    </button>
+                    
+                    <button class="card-button remove-book" data-index="${index}"> 
+                        <span class="material-symbols-outlined">delete</span>
+                    </button>
+                </div>
             `;
 
         bookDisplay.appendChild(bookCard)  
@@ -115,18 +129,24 @@ function displayBooks() {
 
     document.querySelectorAll('.toggle-read').forEach(button => {
         button.addEventListener('click', (e) => {
-            const BookIndex = e.target.getAttribute('data-index');
-            myLibrary[BookIndex].isRead == 'true' ? myLibrary[BookIndex].isRead = 'false' : myLibrary[BookIndex].isRead = 'true';
-            displayBooks()
-        })
-    })
+            // Use the button as the target
+            const BookIndex = e.currentTarget.getAttribute('data-index');
+            if (BookIndex !== null) {
+                myLibrary[BookIndex].isRead = myLibrary[BookIndex].isRead === 'true' ? 'false' : 'true';
+                console.log('clicked');
+                displayBooks();  // Re-render the book list
+            }
+        });
+    });
 
     
     document.querySelectorAll('.remove-book').forEach(button => {
+
         button.addEventListener('click', (e) => {
             const BookIndex = e.target.getAttribute('data-index');
             console.log(BookIndex)
             myLibrary.splice(BookIndex, 1);
+
             displayBooks();
         })
     })
@@ -137,5 +157,6 @@ cancelDialogBtn.addEventListener("click", (e) => {
     e.preventDefault();
     form.reset();
     dialog.close();
-  });
+});
+
 displayBooks();
